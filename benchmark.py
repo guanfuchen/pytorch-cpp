@@ -37,15 +37,16 @@ kwargs = {'dtype': dtype,
 X = torch.randn(options.batch_size, options.features, **kwargs)
 h = torch.randn(options.batch_size, options.state_size, **kwargs)
 C = torch.randn(options.batch_size, options.state_size, **kwargs)
+print('X.shape:', X.shape)
 rnn = LLTM(options.features, options.state_size).to(device, dtype)
 
 # Force CUDA initialization
 new_h, new_C = rnn(X, (h, C))
 (new_h.sum() + new_C.sum()).backward()
 
-forward_min = math.inf
+forward_min = float('inf')
 forward_time = 0
-backward_min = math.inf
+backward_min = float('inf')
 backward_time = 0
 for _ in range(options.runs):
     rnn.zero_grad()
